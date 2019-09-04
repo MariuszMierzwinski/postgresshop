@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <div class="form-group row">
+        <div class="col">
+            First Name
+        </div>
+        <div class="col">
+            Last Name
+        </div>
+        <div class="col">
+            Login
+        </div>
+        <div class="col">
+            Password
+        </div>
+        <div class="col">
+
+        </div>
+    </div>
+    <form action="#" th:action="@{/editableAdmin}" th:object="${product}" method="post">
+
+        <div class="form-group row">
+
+            <!--    <span th:hiden="*{id}"/>-->
+            <input name="id" type="hidden" th:value="${product.id}"/>
+            <!--  <input type="text" class="form-control" th:field="*{id}" placeholder="id"/>-->
+
+            <div class="col">
+                <span th:hiden="*{id}"/>
+                <input type="text" class="form-control" th:field="*{name}" placeholder="name"/>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" th:field="*{price}" placeholder="price"/>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" th:field="*{size}" placeholder="size"/>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" th:field="*{colour}" placeholder="colour"/>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" th:field="*{quantity}" placeholder="colour"/>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" th:field="*{reserved}" placeholder="colour"/>
+            </div>
+            <div class="col">
+                <input type="hidden" class="form-control" th:field="*{picture}" placeholder="colour"/>
+            </div>
+            <div class="col">
+            <select type="text" th:name="sex" class="form-control">
+                <option th:each="curentsex: ${T(com.example.webshop.models.Sex).values()}"
+                        th:selected="${curentsex} == ${product.sex} ? true : false"
+                        th:value="${curentsex}" th:text="${curentsex.displayName}"></option>
+            </select>
+            </div>
+            <div class="col">
+                <select type="text" th:name="cat" class="form-control">
+                    <option th:each="cat: ${categoryList}"
+                            th:selected="${cat.name} == ${product.category.name} ? true : false"
+                            th:value="${cat.name}" th:text="${cat.name}"
+
+                    </option>
+                </select>
+            </div>
+            <div class="col">
+                <button th:id="user" type="submit" value="Add"><i>OK</i></button>
+                <!-- <input class="btn btn-md btn-success btn-block" stype="submit" value="Add">-->
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+</body>
+</html>
