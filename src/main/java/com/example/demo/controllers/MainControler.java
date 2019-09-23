@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 
 import com.example.demo.models.User;
+import com.example.demo.services.CategoryService;
 import com.example.demo.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,16 +13,19 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class MainControler {
     private ProductService productService;
+    private CategoryService categoryService;
 
     @Autowired
-    public MainControler(ProductService productService) {
+    public MainControler(ProductService productService, CategoryService categoryService) {
         this.productService = productService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping({"/", "/home"})
     public String getListProduct(HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
         request.setAttribute("productList", productService.findAll());
+        request.setAttribute("categoryList",categoryService.findAll());
         String userName = (user == null) ? "Anonymous" : user.getFirstName();
         request.getSession().setAttribute("name", userName);
         return "home";

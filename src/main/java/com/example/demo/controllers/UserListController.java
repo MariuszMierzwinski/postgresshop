@@ -33,6 +33,7 @@ public class UserListController {
         return "redirect:list";
     }
 
+
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable String id, ServletRequest request) throws NotFoundException {
         userService.deleteUser(userService.findById(Long.parseLong(id)));

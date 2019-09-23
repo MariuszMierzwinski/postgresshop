@@ -10,27 +10,91 @@
     <title>Title</title>
 </head>
 <body>
-<form action="#" th:action="@{/adminAddCategory}" th:object="${category}" method="post">
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <h5 class="my-0 mr-md-auto font-weight-normal">Sport Shop SDA JSP</h5>
+    <nav class="my-2 my-md-0 mr-md-3">
+        <a class="p-2 text-dark" href="/admin">Product List</a>
+        <a class="p-2 text-dark" href="/tranzaction">List tranzactions</a>
+        <a class="p-2 text-dark" href="/list">Users list</a>
+        <a class="btn btn-outline-primary" action th:href="@{/}">HOME</a>
+    </nav>
+    <a class="btn btn-outline-primary" action href="/login">ADMIN</a>
+</div>
+
+<div class="container">
     <div class="form-group row">
-        <div class="col-sm">
-            <input type="text" class="form-control" th:field="*{name}" placeholder="name">
+        <h5 class="col-sm"> Name </h5>
+        <h5 class="col-sm"> Parent's Id </h5>
+    </div>
+
+    <form th:action="@{/adminAddCategory}" th:object="${category}" method="post">
+        <div class="form-group row">
+            <div class="col-sm">
+                <input type="text" class="form-control" th:field="*{name}" placeholder="name">
+            </div>
+            <div class="col-sm">
+                <select type="text" th:field="*{parents_id}" class="form-control">
+                    <option selected="0" th:value=0 th:text="PARENT"></option>
+                    <option th:if="${cat.parents_id==0}"
+                            th:each="cat: ${categoryList}"
+                            th:value="${cat.id}" th:text="${cat.name}">
+                    </option>
+                </select>
+            </div>
+            <div class="col-sm">
+                <button th:id="category" type="submit">
+                    <i>add</i>
+                </button>
+            </div>
         </div>
-        <div class="col">
-            <select type="text" th:name="cat" class="form-control">
-                <option value="" selected="selected">root</option>
-                <option
-                        th:each="cat: ${categoryList}"
-                        th:value="${cat.id}" th:text="${cat.name}">
-                </option>
-            </select>
-        </div>
-        <div class="col-sm">
-            <button th:id="category" type="submit">
-                <i>add</i>
-            </button>
+    </form>
+    <!--  Root category-->
+
+    <div class="row" th:each="main:${categoryList}">
+        <div th:if="${main.parents_id==0}">
+            <span th:text="'+..'+${main.name}"></span>
+
+            <!--            Child category-->
+
+            <div th:each="cat:${categoryList}">
+                <div class="flex-row" th:if="${main.id==cat.parents_id}">
+                    <form th:action="@{/category_edit/}+${cat.id}" method="post">
+                        <div class="col"></div>
+                        <span th:class="col" th:text="'.....|-'+ ${cat.name}"></span>
+                        <select th:type="text" th:name="parents" onchange="this.form.submit()">
+                            <option selected=${category.id} th:value="${main.id}"
+                                    th:text="${main.name}"></option>
+                            <option class="col" th:if="${caty.parents_id==0}"
+                                    th:each="caty: ${categoryList}"
+                                    th:value="${caty.id}" th:text="${caty.name}">
+                            </option>
+                        </select>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
+    <div><br/></div>
+    <div class="row">
+        <h5 class="col">Name</h5>
+        <h5 class="col">Id</h5>
+        <h5 class="col">Parents Id</h5>
+        <h5 class="col"></h5>
     </div>
-</form>
+    <div th:each="cat:${categoryList}">
+        <div class="row">
+            <div class="col" th:text="${cat.name}"></div>
+            <div class="col" th:text="${cat.id}"></div>
+            <div class="col" th:text="${cat.parents_id}"></div>
+            <div class="col">
+                <form action="#" th:action="@{/admin/delete/} + ${cat.id}" method="post">
+                    <button th:id="category" type="submit">
+                        <i>remove</i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

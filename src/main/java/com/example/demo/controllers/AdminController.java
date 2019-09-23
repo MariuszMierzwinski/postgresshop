@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -38,14 +39,31 @@ public class AdminController {
     @GetMapping("/category")
     public String addCategory(Model model) {
         model.addAttribute("category", new Category());
-        model.addAttribute("categoryList",categoryService.findAll());
+        model.addAttribute("categoryList", categoryService.findAll());
         return "th_addcategory";
+    }
+
+    @PostMapping("/category_edit/{id}")
+    public String addCategory( @RequestParam String parents,@PathVariable String id) throws NotFoundException {
+        Category category=categoryService.findById(Long.parseLong(id));
+        category.setParents_id(Long.parseLong(parents));
+        categoryService.addCategory(category);
+        /* public String addCategory( @ModelAttribute Category category,String parents) throws NotFoundException {
+        category.setParents_id(Long.parseLong(parents));*/
+        System.out.println( categoryService.findById(Long.parseLong(id)).getName() + "--"+parents);
+        return "redirect:/category";
     }
 
     @PostMapping("/adminAddCategory")
     public String categoryAdded(@ModelAttribute Category category) {
         categoryService.addCategory(category);
-        return "redirect:/admin";
+        return "redirect:/category";
+    }
+
+    @PostMapping("admin/delete/{id}")
+    public String delete(@PathVariable String id, ServletRequest request) throws NotFoundException {
+        categoryService.delCategory(categoryService.findById(Long.parseLong(id)));
+        return "redirect:/category";
     }
 
     @PostMapping("admin_inc")
@@ -53,6 +71,7 @@ public class AdminController {
         productService.editProductQuantity(productService.findById((Long.parseLong(id))), "inc");
         return "redirect:/admin";
     }
+
     @PostMapping("admin_dec")
     public String decQuantityOfProduct(@ModelAttribute("dec") String id) throws NotFoundException {
         productService.editProductQuantity(productService.findById((Long.parseLong(id))), "dec");
@@ -65,8 +84,9 @@ public class AdminController {
         model.addAttribute("categoryList", categoryService.findAll());
         return "th_editProduct";
     }
+
     @PostMapping("/editableAdmin")
-    public String addEditedProduct(@ModelAttribute Product product,@ModelAttribute("cat")String cat){
+    public String addEditedProduct(@ModelAttribute Product product, @ModelAttribute("cat") String cat) {
         product.setCategory(categoryService.getCategory(cat));
         productService.addProduct(product);
         return "redirect:/admin";

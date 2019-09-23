@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib  uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <!doctype html>
 <html lang="en">
@@ -51,11 +51,12 @@
             <a class="p-2 text-dark" href="/admin">Control Panel</a>
         </sec:authorize>
     </nav>
- <%--   <sec:authentication property=”principal.username”></sec:authentication>--%>
+
+    <%--   <sec:authentication property=”principal.username”></sec:authentication>--%>
 
     <a class="btn btn-outline-primary" action href="/login">
         <security:authorize access="isAuthenticated()">
-            <security:authentication property="principal.username" />
+            <security:authentication property="principal.username"/>
         </security:authorize></a>
 </div>
 
@@ -64,32 +65,51 @@
     <p class="lead">Store mission, some healthy lifestyle promotion</p>
 </div>
 <div class="container">
+    <div class="row">
+        <div class="col-2">
+            <div class="btn-group-vertical">
+                <c:forEach var="category" items="${requestScope.categoryList}">
+                    <c:if test="${category.parents_id==0}">
+                        <button type="button" class="btn btn-light">${category.name}</button>
+                        <c:forEach var="cat" items="${requestScope.categoryList}">
+                            <c:if test="${category.id==cat.parents_id}">
+                                <button type="button" class="btn btn-dark">${cat.name}</button>
+                            </c:if>
+                        </c:forEach>
+                    </c:if>
 
-    <div class="card-deck mb-4 text-center">
-        <c:forEach var="product" items="${requestScope.productList}">
-            <div class="row">
-                <div class="col-3">
-                    <div class="card mb-3 shadow-sm" style="width: 250px; height: 350px">
-                        <div style="height: 150px;">
-                            <h4 class="my-0 font-weight-normal">${product.name}</h4>
-                        </div>
-                        <div class="card-body">
-                            <img class="mb-2" src="${product.picture}" height="100" width="100">
-                                <small class="text-muted">$</small>
-                            <ul class="list-unstyled mt-2 mb-1">
-                                <li>${product.price}</li>
-                                <li>${product.size}</li>
-                                <li>${product.colour}</li>
-                                <li>${product.sex}</li>
-                                <li>${product.quantity}</li>
-                            </ul>
-                            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Add to basket
-                            </button>
+                </c:forEach>
+            </div>
+        </div>
+        <div class="col-10">
+            <div class="card-deck mb-4 text-center">
+                <c:forEach var="product" items="${requestScope.productList}">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="card mb-3 shadow-sm" style="width: 250px; height: 350px">
+                                <div style="height: 150px;">
+                                    <h4 class="my-0 font-weight-normal">${product.name}</h4>
+                                </div>
+                                <div class="card-body">
+                                    <img class="mb-2" src="${product.picture}" height="100" width="100">
+                                    <small class="text-muted">$</small>
+                                    <ul class="list-unstyled mt-2 mb-1">
+                                        <li>${product.price}</li>
+                                        <li>${product.size}</li>
+                                        <li>${product.colour}</li>
+                                        <li>${product.sex}</li>
+                                        <li>${product.quantity}</li>
+                                    </ul>
+                                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">
+                                        Add to basket
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </c:forEach>
             </div>
-        </c:forEach>
+        </div>
     </div>
     <footer class="pt-4 my-md-5 pt-md-5 border-top">
         <div class="row">

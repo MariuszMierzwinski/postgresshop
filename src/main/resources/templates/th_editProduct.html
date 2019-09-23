@@ -29,13 +29,9 @@
     <form action="#" th:action="@{/editableAdmin}" th:object="${product}" method="post">
 
         <div class="form-group row">
-
-            <!--    <span th:hiden="*{id}"/>-->
             <input name="id" type="hidden" th:value="${product.id}"/>
-            <!--  <input type="text" class="form-control" th:field="*{id}" placeholder="id"/>-->
-
             <div class="col">
-                <span th:hiden="*{id}"/>
+
                 <input type="text" class="form-control" th:field="*{name}" placeholder="name"/>
             </div>
             <div class="col">
@@ -58,7 +54,7 @@
             </div>
             <div class="col">
             <select type="text" th:name="sex" class="form-control">
-                <option th:each="curentsex: ${T(com.example.webshop.models.Sex).values()}"
+                <option th:each="curentsex: ${T(com.example.demo.models.Sex).values()}"
                         th:selected="${curentsex} == ${product.sex} ? true : false"
                         th:value="${curentsex}" th:text="${curentsex.displayName}"></option>
             </select>
@@ -66,8 +62,8 @@
             <div class="col">
                 <select type="text" th:name="cat" class="form-control">
                     <option th:each="cat: ${categoryList}"
-                            th:selected="${cat.name} == ${product.category.name} ? true : false"
-                            th:value="${cat.name}" th:text="${cat.name}"
+                            th:selected="${cat.name} == ${T(com.example.demo.models.Category).getName()} ? true : false"
+                            th:value="${cat.name}" th:text="${cat.name}">
 
                     </option>
                 </select>
