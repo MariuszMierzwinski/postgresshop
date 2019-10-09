@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        ul, #myUL {
+            list-style-type: none;
+        }
+
+        #myUL {
+            margin: 0;
+            padding: 0;
+        }
+
+        .caret {
+            cursor: pointer;
+            -webkit-user-select: none; /* Safari 3.1+ */
+            -moz-user-select: none; /* Firefox 2+ */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none;
+        }
+
+        .caret::before {
+            content: "\25B6";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .caret-down::before {
+            -ms-transform: rotate(90deg); /* IE 9 */
+            -webkit-transform: rotate(90deg); /* Safari */
+        ' transform: rotate(90 deg);
+        }
+
+        .nested {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="btn-group-vertical">
+    <div th:each="category:${categoryList}">
+        <button th:if="${category.parents_id==0}" type="button" class="btn btn-light"
+                th:text="${category.name}"></button>
+        <div th:each="cat:${categoryList}">
+            <button th:if="${category.id==cat.parents_id}" type="button" class="btn btn-dark"
+                    th:text="${cat.name}"></button>
+        </div>
+        </divth>
+    </div>
+    <ul id="myUL">
+        <li th:each="category:${categoryList}"><span th:if="${category.parents_id==0}" class="caret" th:text="${category.name}">Beverages</span>
+            <ul class="nested">
+                <li th:each="cat:${categoryList}"><span  th:if="${category.id==cat.parents_id}" class="caret" th:text="${cat.name}" >Water</span></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+    <script>
+        var toggler = document.getElementsByClassName("caret");
+        var i;
+
+        for (i = 0; i < toggler.length; i++) {
+            toggler[i].addEventListener("click", function () {
+                this.parentElement.querySelector(".nested").classList.toggle("active");
+                this.classList.toggle("caret-down");
+            });
+        }
+    </script>
+
+</body>
+</html>

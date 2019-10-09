@@ -32,10 +32,56 @@
             user-select: none;
         }
 
+        .menu_my {
+
+            width: 150px;
+
+        }
+
         @media (min-width: 768px) {
             .bd-placeholder-img-lg {
                 font-size: 3.5rem;
             }
+        }
+
+        ul, #myUL {
+            list-style-type: none;
+        }
+
+        #myUL {
+            margin: 0;
+            padding: 0;
+        }
+
+        .caret {
+            text-align: left;
+            width: 150px;
+            cursor: pointer;
+            -webkit-user-select: none; /* Safari 3.1+ */
+            -moz-user-select: none; /* Firefox 2+ */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none;
+        }
+
+        .caret::before {
+            content: "\25B6";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .caret-down::before {
+            -ms-transform: rotate(90deg); /* IE 9 */
+            -webkit-transform: rotate(90deg); /* Safari */
+        ' transform: rotate(90 deg);
+        }
+
+        .nested {
+            display: none;
+        }
+
+        .active {
+            display: block;
         }
     </style>
     <!-- Custom styles for this template -->
@@ -53,11 +99,20 @@
     </nav>
 
     <%--   <sec:authentication property=”principal.username”></sec:authentication>--%>
+    <security:authorize access="isAuthenticated()">
+        <a class="btn btn-outline-primary" action href="/logout">
 
-    <a class="btn btn-outline-primary" action href="/login">
-        <security:authorize access="isAuthenticated()">
-            <security:authentication property="principal.username"/>
-        </security:authorize></a>
+            <security:authentication property="principal.username"/></a>
+    </security:authorize>
+    <security:authorize access="isAnonymous()">
+        <a class="btn btn-outline-primary" action href="/login">
+            sing in
+        </a>
+        <a class="btn btn-outline-primary" action href="/registration">
+            registration
+        </a>
+    </security:authorize>
+
 </div>
 
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
@@ -65,49 +120,84 @@
     <p class="lead">Store mission, some healthy lifestyle promotion</p>
 </div>
 <div class="container">
+    <h3>Category </h3>
     <div class="row">
         <div class="col-2">
             <div class="btn-group-vertical">
-                <c:forEach var="category" items="${requestScope.categoryList}">
-                    <c:if test="${category.parents_id==0}">
-                        <button type="button" class="btn btn-light">${category.name}</button>
-                        <c:forEach var="cat" items="${requestScope.categoryList}">
-                            <c:if test="${category.id==cat.parents_id}">
-                                <button type="button" class="btn btn-dark">${cat.name}</button>
-                            </c:if>
-                        </c:forEach>
-                    </c:if>
-
-                </c:forEach>
+                <ul id="myUL">
+                    <c:forEach var="category" items="${requestScope.categoryList}">
+                        <c:if test="${category.parents_id==0}">
+                            <li>
+                                <button class="caret">${category.name}</button>
+                                <ul class="nested">
+                                    <c:forEach var="cat" items="${requestScope.categoryList}">
+                                        <c:if test="${category.id==cat.parents_id}">
+                                            <li>
+                                                <form name="submitForm" method="GET" action="ProductCat">
+                                                    <input type="hidden" name="cat" value="${cat.id}">
+                                                    <button class="menu_my"
+                                                            href="javascript: submitform()">${cat.name}</button>
+                                                </form>
+                                            </li>
+                                        </c:if>
+                                    </c:forEach>
+                                </ul>
+                            </li>
+                        </c:if>
+                    </c:forEach>
+                </ul>
             </div>
         </div>
         <div class="col-10">
             <div class="card-deck mb-4 text-center">
                 <c:forEach var="product" items="${requestScope.productList}">
-                    <div class="row">
-                        <div class="col-3">
-                            <div class="card mb-3 shadow-sm" style="width: 250px; height: 350px">
-                                <div style="height: 150px;">
-                                    <h4 class="my-0 font-weight-normal">${product.name}</h4>
-                                </div>
-                                <div class="card-body">
-                                    <img class="mb-2" src="${product.picture}" height="100" width="100">
-                                    <small class="text-muted">$</small>
-                                    <ul class="list-unstyled mt-2 mb-1">
-                                        <li>${product.price}</li>
-                                        <li>${product.size}</li>
-                                        <li>${product.colour}</li>
-                                        <li>${product.sex}</li>
-                                        <li>${product.quantity}</li>
-                                    </ul>
-                                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">
-                                        Add to basket
-                                    </button>
+                    <c:if test="${requestScope.categoryId == product.category.getId()}">
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="card mb-3 shadow-sm" style="width: 250px; height: 350px">
+                                    <div style="height: 150px;">
+                                        <h4 class="my-0 font-weight-normal">${product.name}</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <img class="mb-2" src="${product.picture}" height="100" width="100">
+                                        <small class="text-muted">$</small>
+                                        <ul class="list-unstyled mt-2 mb-1">
+                                            <li class="row">
+                                                <div class="col-sm">Price</div>
+                                                <div class="col-sm">${product.price}
+                                                    <div class="col-sm">
+                                            </li>
+                                            <li class="row">
+                                                <div class="col-sm">Size</div>
+                                                <div class="col-sm">${product.size}
+                                                    <div class="col-sm">
+                                            </li>
+                                            <li class="row">
+                                                <div class="col-sm">Color</div>
+                                                <div class="col-sm">${product.colour}
+                                                    <div class="col-sm">
+                                            </li>
+                                            <li class="row">
+                                                <div class="col-sm">Gender</div>
+                                                <div class="col-sm">${product.sex}
+                                                    <div class="col-sm">
+                                            </li>
+                                            <li class="row">
+                                                <div class="col-sm">Quantity</div>
+                                                <div class="col-sm">${product.quantity}
+                                                    <div class="col-sm">
+                                            </li>
+                                        </ul>
+                                        <button type="button" class="btn btn-lg btn-block btn-outline-primary">
+                                            Add to basket
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </c:if>
                 </c:forEach>
+
             </div>
         </div>
     </div>
@@ -149,6 +239,18 @@
         </div>
     </footer>
 </div>
+iv>
+<script>
+    var toggler = document.getElementsByClassName("caret");
+    var i;
+
+    for (i = 0; i < toggler.length; i++) {
+        toggler[i].addEventListener("click", function () {
+            this.parentElement.querySelector(".nested").classList.toggle("active");
+            this.classList.toggle("caret-down");
+        });
+    }
+</script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

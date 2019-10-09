@@ -145,7 +145,21 @@
                      height="24"
                      width="24">
             </td>
-            <td class="pt-3-half" contenteditable="true" th:text=${product.category.name}></td>
+            <td class="pt-3-half" >
+                <div>
+                    <form th:action="@{/product_cat_edit}" method="post">
+
+                            <select type="text" th:name="cat" onchange="this.form.submit()" class="form-control">
+                                <option th:each="cat: ${categoryList}"
+                                        th:selected="${cat.name} == ${product.category.name} ? true : false"
+                                        th:value="${cat.id}" th:text="${cat.name}">
+
+                                </option>
+                                <input type="hidden" th:name="prductId" th:value="${product.id}">
+                            </select>
+                    </form>
+                </div>
+            </td>
             <td class="pt-3-half" contenteditable="true" th:text=${product.quantity}></td>
             <td class="pt-3-half" contenteditable="true">
                 <button th:id="product" type="submit" th:name="dec" th:value="${product.id}" form="dec">

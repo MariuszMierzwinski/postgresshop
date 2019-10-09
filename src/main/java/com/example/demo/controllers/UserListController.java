@@ -5,6 +5,7 @@ import com.example.demo.models.User;
 import com.example.demo.services.UserService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,8 @@ public class UserListController {
 
     @PostMapping("/list")
     public String addUser(@ModelAttribute User user) {
+        String encoded = new BCryptPasswordEncoder().encode(user.getPassword());
+        user.setPassword(encoded);
         userService.addUser(user);
         return "redirect:list";
     }

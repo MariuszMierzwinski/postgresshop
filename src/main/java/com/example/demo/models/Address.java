@@ -8,9 +8,9 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-   /* @OneToOne
-    @JoinColumn(name = "user", referencedColumnName = "id")
-    private User user;*/
+    @OneToOne
+    @JoinColumn(name = "user1", referencedColumnName = "id")
+    private User user;
     private String city;
     private String country;
     private String street;

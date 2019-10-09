@@ -1,5 +1,5 @@
 
-
+/*
 CREATE table address (
 id  bigint PRIMARY KEY AUTO_INCREMENT,
 
@@ -16,4 +16,4 @@ CREATE table users  (
     first_name varchar(24),
     sure_name varchar(24),
     FOREIGN KEY (address) REFERENCES address(id)
-);
+);*/

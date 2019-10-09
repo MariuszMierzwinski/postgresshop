@@ -44,13 +44,13 @@ public class AdminController {
     }
 
     @PostMapping("/category_edit/{id}")
-    public String addCategory( @RequestParam String parents,@PathVariable String id) throws NotFoundException {
-        Category category=categoryService.findById(Long.parseLong(id));
+    public String addCategory(@RequestParam String parents, @PathVariable String id) throws NotFoundException {
+        Category category = categoryService.findById(Long.parseLong(id));
         category.setParents_id(Long.parseLong(parents));
         categoryService.addCategory(category);
         /* public String addCategory( @ModelAttribute Category category,String parents) throws NotFoundException {
         category.setParents_id(Long.parseLong(parents));*/
-        System.out.println( categoryService.findById(Long.parseLong(id)).getName() + "--"+parents);
+        System.out.println(categoryService.findById(Long.parseLong(id)).getName() + "--" + parents);
         return "redirect:/category";
     }
 
@@ -58,6 +58,12 @@ public class AdminController {
     public String categoryAdded(@ModelAttribute Category category) {
         categoryService.addCategory(category);
         return "redirect:/category";
+    }
+
+    @GetMapping("/menu")
+    public String menu(Model model) {
+        model.addAttribute("categoryList", categoryService.findAll());
+        return "th_menu";
     }
 
     @PostMapping("admin/delete/{id}")
@@ -105,7 +111,24 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    @PostMapping("/product_cat_edit")
+    public String changeCategory(@ModelAttribute("cat") String cat, @ModelAttribute("prductId") String prID) throws NotFoundException {
+        Product product=productService.findById(Long.parseLong(prID));
+        product.setCategory(categoryService.findById(Long.parseLong(cat)));
+        productService.addProduct(product);
+        return "redirect:/admin";
+    }
 
+    @GetMapping("ProductCat")
+    public String getCategoryListProduct(ServletRequest req, @RequestParam String cat) {
+        Long caty = Long.parseLong(cat);
+        System.out.println("Category " + cat);
+        req.setAttribute("categoryId", cat);
+        req.setAttribute("productList", productService.findAll());
+        req.setAttribute("categoryList", categoryService.findAll());
+        return "/home";
+
+    }
 }
 
 
